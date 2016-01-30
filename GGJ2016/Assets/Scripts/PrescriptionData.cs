@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 namespace AssemblyCSharp
 {
+	[Serializable]
 	public class MedicationData
 	{
 		public int numberOfPills;
@@ -26,13 +27,28 @@ namespace AssemblyCSharp
 		public bool needNoon;
 		public bool needEvening;
 	}
-
+	
+	[Serializable]
 	public class PrescriptionData
 	{
-		public List<MedicationData> listOfMedication;
+		public List<MedicationData> listOfMedications;
 
 		public PrescriptionData ()
 		{
+			listOfMedications = new List<MedicationData> ();
+		}
+
+		public void AddMedicationData(string medicationName, int numberOfPills, int frequencyByDay, bool needMorning, bool needNoon, bool needEvening)
+		{
+			MedicationData medData = new MedicationData ();
+			medData.medicationName = medicationName;
+			medData.numberOfPills = numberOfPills;
+			medData.frequencyByDay = frequencyByDay;
+			medData.periodOfTimeIsImportant = needMorning || needNoon || needEvening;
+			medData.needMorning = needMorning;
+			medData.needNoon = needNoon;
+			medData.needEvening = needEvening;
+			listOfMedications.Add (medData);
 		}
 	}
 }

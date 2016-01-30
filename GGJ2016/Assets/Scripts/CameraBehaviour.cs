@@ -9,9 +9,11 @@ public class CameraBehaviour : MonoBehaviour {
 	public Animator hiccupAnimator;
 	public Animator tiltAnimator;
 	public Animator zoomAnimator;
+	public Animator sneezeAnimator;
 
 	public bool shake;
 	public bool hiccup;
+	public bool sneeze;
 	public bool tilt;
 	public bool zoom;
 
@@ -44,6 +46,24 @@ public class CameraBehaviour : MonoBehaviour {
 	{
 		hiccup = active;
 		hiccupAnimator.SetBool ("Hiccup", active);
+	}
+	
+	public void SetSneeze(bool active)
+	{
+		sneeze = active;
+		if (sneeze)
+		{
+			StartCoroutine (WaitAndSneeze (Random.Range (2.0f, 5.0f)));
+		}
+	}
+	IEnumerator WaitAndSneeze(float timer)
+	{
+		yield return new WaitForSeconds (timer);
+		sneezeAnimator.SetTrigger ("Sneeze");
+		if (sneeze)
+		{
+			StartCoroutine (WaitAndSneeze (Random.Range (2.0f, 5.0f)));
+		}
 	}
 	
 	public void SetTilt(bool active)
