@@ -17,6 +17,12 @@ public class CameraBehaviour : MonoBehaviour {
 
 	// Image effects
 	public bool noise;
+	public bool sepia;
+	public bool grayscale;
+	public bool motionBlur;
+	public bool pixelOverlay;
+	public bool satanContrasts;
+
 
 	// Use this for initialization
 	void Start () 
@@ -56,5 +62,35 @@ public class CameraBehaviour : MonoBehaviour {
 	{
 		noise = active;
 		this.GetComponent<NoiseAndScratches> ().enabled = active;
+	}
+	
+	public void SetSepia(bool active)
+	{
+		sepia = active;
+		this.GetComponent<SepiaTone> ().enabled = active;
+	}
+	
+	public void SetGrayscale(bool active)
+	{
+		grayscale = active;
+		this.GetComponent<Grayscale> ().enabled = active;
+	}
+	
+	public void SetMotionBlur(bool active)
+	{
+		motionBlur = active;
+		this.GetComponent<MotionBlur> ().enabled = active;
+	}
+	
+	public void SetPixelOverlay(bool active)
+	{
+		pixelOverlay = active;
+		this.GetComponent<ScreenOverlay> ().enabled = active;
+	}
+	
+	public void SetSatanContrasts(bool active)
+	{
+		satanContrasts = active;
+		this.GetComponent<ContrastStretch> ().enabled = active;
 	}
 }
