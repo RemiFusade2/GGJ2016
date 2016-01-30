@@ -4,40 +4,57 @@ using UnityStandardAssets.ImageEffects;
 
 public class CameraBehaviour : MonoBehaviour {
 
-	public bool shake;
-	private Vector3 shakeVec;
-	private Vector3 originalPosition ;
+	// Animations
+	public Animator shakeAnimator;
+	public Animator hiccupAnimator;
+	public Animator tiltAnimator;
+	public Animator zoomAnimator;
 
+	public bool shake;
+	public bool hiccup;
+	public bool tilt;
+	public bool zoom;
+
+	// Image effects
 	public bool noise;
 
 	// Use this for initialization
 	void Start () 
 	{
-		originalPosition = this.transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if (shake)
-		{
-			shakeVec = new Vector3(Random.Range(-0.1f,0.1f), Random.Range(-0.1f,0.1f), 0);
-			this.transform.position = originalPosition + shakeVec;
-		}
-		if (noise)
-		{
-
-		}
 	}
 
-	public void ApplyShake()
+	public void SetShake(bool active)
 	{
-		shake = true;
+		shake = active;
+		shakeAnimator.SetBool ("Shake", active);
+	}
+	
+	public void SetHiccup(bool active)
+	{
+		hiccup = active;
+		hiccupAnimator.SetBool ("Hiccup", active);
+	}
+	
+	public void SetTilt(bool active)
+	{
+		tilt = active;
+		tiltAnimator.SetBool ("Tilt", active);
+	}
+	
+	public void SetZoom(bool active)
+	{
+		zoom = active;
+		zoomAnimator.SetBool ("Zoom", active);
 	}
 
-	public void ApplyNoise()
+	public void SetNoise(bool active)
 	{
-		noise = true;
-		this.GetComponent<NoiseAndScratches> ().enabled = true;
+		noise = active;
+		this.GetComponent<NoiseAndScratches> ().enabled = active;
 	}
 }

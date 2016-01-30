@@ -6,6 +6,9 @@ public class PillBehaviour : MonoBehaviour {
 	public bool grabed;
 
 	public bool shakeEffect;
+	public bool hiccupEffect;
+	public bool tiltEffect;
+	public bool zoomEffect;
 	public bool noiseEffect;
 
 	// Use this for initialization
