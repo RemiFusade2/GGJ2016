@@ -53,7 +53,7 @@ public class CameraBehaviour : MonoBehaviour {
 		sneeze = active;
 		if (sneeze)
 		{
-			StartCoroutine (WaitAndSneeze (Random.Range (2.0f, 5.0f)));
+			StartCoroutine (WaitAndSneeze (12.0f));
 		}
 	}
 	IEnumerator WaitAndSneeze(float timer)
@@ -62,7 +62,7 @@ public class CameraBehaviour : MonoBehaviour {
 		sneezeAnimator.SetTrigger ("Sneeze");
 		if (sneeze)
 		{
-			StartCoroutine (WaitAndSneeze (Random.Range (2.0f, 5.0f)));
+			StartCoroutine (WaitAndSneeze (Random.Range (5.0f, 10.0f)));
 		}
 	}
 	
@@ -111,7 +111,10 @@ public class CameraBehaviour : MonoBehaviour {
 	public void SetSatanContrasts(bool active)
 	{
 		satanContrasts = active;
-		this.GetComponent<ContrastStretch> ().enabled = active;
+		if (this.GetComponent<ContrastEnhance> () != null)
+		{
+			this.GetComponent<ContrastEnhance> ().enabled = active;
+		}
 	}
 
 	public void RemoveEffects()
@@ -121,7 +124,7 @@ public class CameraBehaviour : MonoBehaviour {
 		SetMotionBlur (false);
 		SetNoise (false);
 		SetPixelOverlay (false);
-		//SetSatanContrasts (false);
+		SetSatanContrasts (false);
 		SetSepia (false);
 		SetShake (false);
 		SetSneeze (false);

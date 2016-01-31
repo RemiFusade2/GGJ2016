@@ -22,6 +22,8 @@ public class SideEffect
 
 public class GameEngine : MonoBehaviour {
 
+	public CursorBehaviour cursor;
+
 	public CameraBehaviour cameraScript;
 
 	public AudioSource backgroundMusicSource;
@@ -65,6 +67,8 @@ public class GameEngine : MonoBehaviour {
 
 	public bool gameLaunched;
 
+	public DoctorSFXManagerBehaviour doctorSFXManager;
+
 	// UI
 	public void ShowTitle(bool show)
 	{
@@ -72,6 +76,7 @@ public class GameEngine : MonoBehaviour {
 		if (!show)
 		{
 			StartCoroutine (WaitAndStartNextDay (4.0f));
+			StartCoroutine (WaitAndPlayIntroSound (1.0f));
 			backgroundMusicSource.clip = healthyMusic;
 			backgroundMusicSource.Play();
 		}
@@ -116,18 +121,20 @@ public class GameEngine : MonoBehaviour {
 		gameLaunched = false;
 		prescriptionScript.ShowPrescription (false);
 
-		if (currentPlayerHP > 0)
+		if (currentPlayerHP > 1)
 		{
 			daysCount++;
 			dayText.text = "DAY " + daysCount;
-			
-			if ( (currentPlayerHP * 1.0f / maxPlayerHP) > 0.75f)
+
+			float healthRatio = (currentPlayerHP * 1.0f / maxPlayerHP);
+
+			if ( healthRatio > 0.75f)
 			{
 				doctorMessage.text = healthyMessages[Random.Range(0,healthyMessages.Count)];
 				backgroundMusicSource.clip = healthyMusic;
 				backgroundMusicSource.Play();
 			}
-			else if ( (currentPlayerHP * 1.0f / maxPlayerHP) > 0.4f)
+			else if ( healthRatio > 0.4f)
 			{
 				doctorMessage.text = mediumHealthMessages[Random.Range(0,mediumHealthMessages.Count)];
 				backgroundMusicSource.clip = mediumMusic;
@@ -139,17 +146,39 @@ public class GameEngine : MonoBehaviour {
 				backgroundMusicSource.clip = weakMusic;
 				backgroundMusicSource.Play();
 			}
+			
+			StartCoroutine (WaitAndPlayDoctorSound (1.0f, healthRatio));
+
 			StartCoroutine (WaitAndStartNextDay (3.0f));
 		}
 		else
 		{
 			dayText.text = "GAME OVER";
 			doctorMessage.text = gameOverMessages[Random.Range(0,gameOverMessages.Count)];
-
+			
+			StartCoroutine (WaitAndPlayGameOverSound (1.0f));
 			StartCoroutine(WaitAndRestart(5.0f));
 		}
 		blackFadeScreen.SetActive (true);
 		blackFadeAnimator.SetBool ("Visible", true);
+	}
+	
+	IEnumerator WaitAndPlayDoctorSound(float timer, float health)
+	{
+		yield return new WaitForSeconds (timer);
+		doctorSFXManager.PlaySound (health);
+	}
+	
+	IEnumerator WaitAndPlayGameOverSound(float timer)
+	{
+		yield return new WaitForSeconds (timer);
+		doctorSFXManager.PlayGameOver ();
+	}
+	
+	IEnumerator WaitAndPlayIntroSound(float timer)
+	{
+		yield return new WaitForSeconds (timer);
+		doctorSFXManager.PlayIntro ();
 	}
 	
 	IEnumerator WaitAndRestart(float timer)
@@ -454,6 +483,46 @@ public class GameEngine : MonoBehaviour {
 		if (sideEffectsToInflict.Contains("Overlay"))
 		{
 			cameraScript.SetPixelOverlay(true);
+		}
+
+		// Sepia
+		if (sideEffectsToHeal.Contains("Sepia"))
+		{
+			cameraScript.SetSepia(false);
+		}
+		if (sideEffectsToInflict.Contains("Sepia"))
+		{
+			cameraScript.SetSepia(true);
+		}
+		
+		// Cursor Shake
+		if (sideEffectsToHeal.Contains("CursorShaking"))
+		{
+			cursor.shaking = false;
+		}
+		if (sideEffectsToInflict.Contains("CursorShaking"))
+		{
+			cursor.shaking = true;
+		}
+		
+		// Sneeze
+		if (sideEffectsToHeal.Contains("Sneeze"))
+		{
+			cameraScript.SetSneeze(false);
+		}
+		if (sideEffectsToInflict.Contains("Sneeze"))
+		{
+			cameraScript.SetSneeze(true);
+		}
+		
+		// MegaContrasts
+		if (sideEffectsToHeal.Contains("MegaContrasts"))
+		{
+			cameraScript.SetSatanContrasts(false);
+		}
+		if (sideEffectsToInflict.Contains("MegaContrasts"))
+		{
+			cameraScript.SetSatanContrasts(true);
 		}
 	}
 	

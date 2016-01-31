@@ -6,7 +6,7 @@ namespace UnityStandardAssets.ImageEffects
     [ExecuteInEditMode]
     [RequireComponent(typeof(Camera))]
     [AddComponentMenu("Image Effects/Color Adjustments/Contrast Enhance (Unsharp Mask)")]
-    class ContrastEnhance : PostEffectsBase
+    public class ContrastEnhance : PostEffectsBase
 	{
         public float intensity = 0.5f;
         public float threshold = 0.0f;
