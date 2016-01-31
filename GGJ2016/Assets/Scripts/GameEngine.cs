@@ -160,7 +160,7 @@ public class GameEngine : MonoBehaviour {
 		currentPlayerHP = maxPlayerHP;
 		healthBar.value = currentPlayerHP;
 		dayText.text = "DAY 1";
-		doctorMessage.text = "\"Hello, I'm Dr. Frank’n Nutter.\nI'm here to take care of you.\nYou are not sick but in prevention, take that prescription.\"";
+		doctorMessage.text = "\"Hello, I'm Dr. Frank’n Nutter.\nI'm here to take care of you.\nYou are not sick YET, but in prevention, take that prescription.\"";
 		ShowTitle (true);
 		cameraScript.RemoveEffects ();
 	}
@@ -225,6 +225,8 @@ public class GameEngine : MonoBehaviour {
 		allPillsContainers.Add (eveningPills);
 		Dictionary<string,int> allPillsDico = CreatePillsDico(allPillsContainers);
 
+		List<int> remainingMedsToTakeFromPrescription = new List<int> ();
+
 		// compare with prescription and remove pills
 		int howManyPillsLeftOnPrescription = 0;
 		foreach (MedicationData medData in currentPrescription.listOfMedications)
@@ -288,6 +290,9 @@ public class GameEngine : MonoBehaviour {
 					allPillsDico.Remove(medicationName);
 				}
 				medicationCount = medicationCount_Morning + medicationCount_Noon + medicationCount_Evening;
+				//Debug.Log("medicationCount_Morning = " + medicationCount_Morning);
+				//Debug.Log("medicationCount_Noon = " + medicationCount_Noon);
+				//Debug.Log("medicationCount_Evening = " + medicationCount_Evening);
 				howManyPillsLeftOnPrescription += medicationCount;
 			}
 			else
@@ -303,21 +308,30 @@ public class GameEngine : MonoBehaviour {
 				{
 					allPillsDico.Remove(medicationName);
 				}
+				//Debug.Log("medicationCount = " + medicationCount);
 				howManyPillsLeftOnPrescription += medicationCount;
 			}
+			remainingMedsToTakeFromPrescription.Add(medicationCount);
 			
 			//Debug.Log ("You need " + howManyPillsLeftOnPrescription + " total pills");
 		}
 		//Debug.Log ("You missed " + howManyPillsLeftOnPrescription + " pills on your prescription");
 
 		// too much pills ?
-		int numberOfUnwantedPills = allPillsDico.Count;
+		int numberOfUnwantedPills = 0;
+		foreach (int val in allPillsDico.Values)
+		{
+			numberOfUnwantedPills += val;
+		}
+		//Debug.Log ("numberOfUnwantedPills: " + numberOfUnwantedPills);
 		//Debug.Log ("You took " + numberOfUnwantedPills + " pills you didn't need");
 
 		// HP loss
+		prescriptionScript.ShowErrors (remainingMedsToTakeFromPrescription);
 		int HPLoss = howManyPillsLeftOnPrescription + numberOfUnwantedPills;
 		currentPlayerHP -= HPLoss;
 		healthBar.value = currentPlayerHP;
+		//Debug.Log ("HPLoss: " + HPLoss);
 
 		// side effects
 		allPillsDico = CreatePillsDico(allPillsContainers);

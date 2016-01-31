@@ -45,6 +45,7 @@ public class PrescriptionBehaviour : MonoBehaviour
 	public List<int> maxCharacterCountOnALineByFont;
 
 	public TextMesh prescriptionText;
+	private List<string> prescriptionLines;
 
 	public GameEngine gameEngine;
 
@@ -56,7 +57,7 @@ public class PrescriptionBehaviour : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		//CreatePrescription ();
+		prescriptionLines = new List<string> ();
 	}
 	
 	// Update is called once per frame
@@ -68,6 +69,8 @@ public class PrescriptionBehaviour : MonoBehaviour
 	public void CreatePrescription()
 	{
 		PrescriptionData resultPrescription = new PrescriptionData ();
+
+		prescriptionLines.Clear ();
 
 		int dayIndex = gameEngine.daysCount - 1;
 		int difficultyIndex = (dayIndex >= difficultyLevels.Count ? (difficultyLevels.Count - 1) : dayIndex);
@@ -140,7 +143,9 @@ public class PrescriptionBehaviour : MonoBehaviour
 			}
 
 			resultPrescription.AddMedicationData(prescriptionMedsName[medIndex], medsCount, suffix.frequencyByDay, suffix.needMorning, suffix.needNoon, suffix.needEvening);
-			
+
+			prescriptionLines.Add(newLine);
+
 			result += newLine + "\n";
 		}
 
@@ -156,6 +161,25 @@ public class PrescriptionBehaviour : MonoBehaviour
 		medsContainerManager.AddRandomContainers (numberOfMedsOnTable - usedMedNames.Count);
 
 		gameEngine.SetPrescription (resultPrescription);
+	}
+
+	public void ShowErrors(List<int> remainingMedsToTake)
+	{
+		string result = "";
+		int index = 0;
+		foreach (int remainingMeds in remainingMedsToTake)
+		{
+			if (remainingMeds > 0)
+			{
+				result += "<color=red>" + prescriptionLines[index] + "</color>\n";
+			}
+			else
+			{
+				result += prescriptionLines[index] + "\n";
+			}
+			index++;
+		}
+		prescriptionText.text = result;
 	}
 
 	public void ShowPrescription(bool visible)
