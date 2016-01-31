@@ -6,6 +6,8 @@ public class PillBehaviour : MonoBehaviour
 	public GameObject cursor;
 
 	public string medicationName;
+	
+	public SFXBehaviour sfxManager;
 
 	// Use this for initialization
 	void Start () 
@@ -18,6 +20,7 @@ public class PillBehaviour : MonoBehaviour
 		if (Input.GetMouseButtonUp(0))
 		{
 			Destroy(this.GetComponent<HingeJoint2D>());
+			sfxManager.PlayDropPillSound ();
 		}
 	}
 
@@ -25,5 +28,6 @@ public class PillBehaviour : MonoBehaviour
 	{
 		Vector3 cursorPositionInWorld = Camera.main.ScreenToWorldPoint (Input.mousePosition + Camera.main.transform.forward * 10);
 		this.gameObject.AddComponent<HingeJoint2D> ().connectedBody = cursor.GetComponent<Rigidbody2D>();
+		sfxManager.PlayTakePillSound ();
 	}
 }

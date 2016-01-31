@@ -2,6 +2,7 @@
 using System.Collections;
 using AssemblyCSharp;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class CombinationOfMeds
@@ -22,6 +23,25 @@ public class SideEffect
 public class GameEngine : MonoBehaviour {
 
 	public CameraBehaviour cameraScript;
+
+	public AudioSource backgroundMusicSource;
+	public AudioClip menuMusic;
+	public AudioClip healthyMusic;
+	public AudioClip mediumMusic;
+	public AudioClip weakMusic;
+
+	public Text dayText;
+	public Text doctorMessage;
+
+	public List<string> healthyMessages;
+	public List<string> mediumHealthMessages;
+	public List<string> weakMessages;
+	public List<string> gameOverMessages;
+
+	public Animator blackFadeAnimator;
+	public GameObject blackFadeScreen;
+
+	public int daysCount;
 	
 	public Transform morningPills;
 	public Transform noonPills;
@@ -42,10 +62,18 @@ public class GameEngine : MonoBehaviour {
 	public int maxPlayerHP;
 	private int currentPlayerHP;
 
+	public bool gameLaunched;
+
 	// UI
 	public void ShowTitle(bool show)
 	{
 		titlePanel.SetActive (show);
+		if (!show)
+		{
+			StartCoroutine (WaitAndStartNextDay (4.0f));
+			backgroundMusicSource.clip = healthyMusic;
+			backgroundMusicSource.Play();
+		}
 	}
 
 	public void ShowCredits(bool show)
@@ -57,8 +85,8 @@ public class GameEngine : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+		daysCount = 1;
 		currentPlayerHP = maxPlayerHP;
-		StartDay ();
 	}
 	
 	// Update is called once per frame
@@ -71,11 +99,61 @@ public class GameEngine : MonoBehaviour {
 	{
 		prescriptionScript.CreatePrescription ();
 		prescriptionScript.ShowPrescription (true);
+		gameLaunched = true;
 	}
 
 	public void EndDay()
 	{
+		gameLaunched = false;
 		prescriptionScript.ShowPrescription (false);
+
+		if (currentPlayerHP > 0)
+		{
+			daysCount++;
+			dayText.text = "DAY " + daysCount;
+			
+			if ( (currentPlayerHP * 1.0f / maxPlayerHP) > 0.75f)
+			{
+				doctorMessage.text = healthyMessages[Random.Range(0,healthyMessages.Count)];
+				backgroundMusicSource.clip = healthyMusic;
+				backgroundMusicSource.Play();
+			}
+			else if ( (currentPlayerHP * 1.0f / maxPlayerHP) > 0.4f)
+			{
+				doctorMessage.text = mediumHealthMessages[Random.Range(0,mediumHealthMessages.Count)];
+				backgroundMusicSource.clip = mediumMusic;
+				backgroundMusicSource.Play();
+			}
+			else
+			{
+				doctorMessage.text = weakMessages[Random.Range(0,weakMessages.Count)];
+				backgroundMusicSource.clip = weakMusic;
+				backgroundMusicSource.Play();
+			}
+		}
+		else
+		{
+			dayText.text = "GAME OVER";
+			doctorMessage.text = gameOverMessages[Random.Range(0,gameOverMessages.Count)];
+		}
+		
+		blackFadeScreen.SetActive (true);
+		blackFadeAnimator.SetBool ("Visible", true);
+		StartCoroutine (WaitAndStartNextDay (3.0f));
+	}
+
+	IEnumerator WaitAndStartNextDay(float timer)
+	{
+		yield return new WaitForSeconds (timer);
+		blackFadeAnimator.SetBool ("Visible", false);
+		StartCoroutine (WaitAndHideBlackFadeScreen (2.0f));
+		StartDay ();
+	}
+
+	IEnumerator WaitAndHideBlackFadeScreen(float timer)
+	{
+		yield return new WaitForSeconds (timer);
+		blackFadeScreen.SetActive (false);
 	}
 
 	public void SetPrescription(PrescriptionData prescription)
@@ -131,7 +209,7 @@ public class GameEngine : MonoBehaviour {
 			string medicationName = medData.medicationName;
 			int medicationCount = medData.numberOfPills * medData.frequencyByDay;
 						
-			Debug.Log ("You need " + medicationCount + " pills of " + medicationName);
+			//Debug.Log ("You need " + medicationCount + " pills of " + medicationName);
 
 			if (medData.periodOfTimeIsImportant)
 			{
@@ -139,9 +217,9 @@ public class GameEngine : MonoBehaviour {
 				int medicationCount_Noon = medData.needNoon ? medicationCount : 0;
 				int medicationCount_Evening = medData.needEvening ? medicationCount : 0;
 				
-				Debug.Log ("You need " + medicationCount_Morning + " pills of " + medicationName + " on morning");
-				Debug.Log ("You need " + medicationCount_Noon + " pills of " + medicationName + " at noon");
-				Debug.Log ("You need " + medicationCount_Evening + " pills of " + medicationName + " on evening");
+				//Debug.Log ("You need " + medicationCount_Morning + " pills of " + medicationName + " on morning");
+				//Debug.Log ("You need " + medicationCount_Noon + " pills of " + medicationName + " at noon");
+				//Debug.Log ("You need " + medicationCount_Evening + " pills of " + medicationName + " on evening");
 
 				if (medData.needMorning)
 				{
@@ -195,8 +273,8 @@ public class GameEngine : MonoBehaviour {
 				{
 					allPillsDico[medicationName] = allPillsDico[medicationName] - 1;
 					medicationCount--;
-					Debug.Log ("You take one " + medicationName);
-					Debug.Log (allPillsDico[medicationName] + " " + medicationName + " left");
+					//Debug.Log ("You take one " + medicationName);
+					//Debug.Log (allPillsDico[medicationName] + " " + medicationName + " left");
 				}
 				if (allPillsDico.ContainsKey(medicationName) && allPillsDico[medicationName] <= 0)
 				{
@@ -205,13 +283,13 @@ public class GameEngine : MonoBehaviour {
 				howManyPillsLeftOnPrescription += medicationCount;
 			}
 			
-			Debug.Log ("You need " + howManyPillsLeftOnPrescription + " total pills");
+			//Debug.Log ("You need " + howManyPillsLeftOnPrescription + " total pills");
 		}
-		Debug.Log ("You missed " + howManyPillsLeftOnPrescription + " pills on your prescription");
+		//Debug.Log ("You missed " + howManyPillsLeftOnPrescription + " pills on your prescription");
 
 		// too much pills ?
 		int numberOfUnwantedPills = allPillsDico.Count;
-		Debug.Log ("You took " + numberOfUnwantedPills + " pills you didn't need");
+		//Debug.Log ("You took " + numberOfUnwantedPills + " pills you didn't need");
 
 		// HP loss
 		int HPLoss = howManyPillsLeftOnPrescription + numberOfUnwantedPills;
@@ -229,9 +307,9 @@ public class GameEngine : MonoBehaviour {
 				bool combinationIsMet = true;
 				foreach (string med in combination.responsibleMeds)
 				{
-					Debug.Log ("looking for " + combination.minimumDosageToApplyEffect + " " + med);
+					//Debug.Log ("looking for " + combination.minimumDosageToApplyEffect + " " + med);
 					combinationIsMet &= (allPillsDico.ContainsKey(med) && allPillsDico[med] >= combination.minimumDosageToApplyEffect);
-					Debug.Log ("there was " + (allPillsDico.ContainsKey(med) ? allPillsDico[med] : 0));
+					//Debug.Log ("there was " + (allPillsDico.ContainsKey(med) ? allPillsDico[med] : 0));
 				}
 				oneCombinationIsMet |= combinationIsMet;
 				if (oneCombinationIsMet)
@@ -343,5 +421,6 @@ public class GameEngine : MonoBehaviour {
 	public void AbsorbPills()
 	{
 		CountPills ();
+		EndDay ();
 	}
 }

@@ -15,10 +15,21 @@ public class PrescriptionSuffix
 	public bool needEvening;
 }
 
-public class PrescriptionBehaviour : MonoBehaviour {
-	
+[System.Serializable]
+public class DifficultyLevel
+{
 	public int minNumberOfLines;
 	public int maxNumberOfLines;
+	
+	public int minNumberOfMeds;
+	public int maxNumberOfMeds;
+}
+
+public class PrescriptionBehaviour : MonoBehaviour 
+{	
+	public MedsContainersManagerBehaviour medsContainerManager;
+
+	public List<DifficultyLevel> difficultyLevels;
 
 	public int minMedsCount;
 	public int maxMedsCount;
@@ -37,6 +48,10 @@ public class PrescriptionBehaviour : MonoBehaviour {
 
 	public GameEngine gameEngine;
 
+	public void PlayPaperSound()
+	{
+		this.GetComponent<AudioSource>().Play();
+	}
 
 	// Use this for initialization
 	void Start () 
@@ -54,8 +69,16 @@ public class PrescriptionBehaviour : MonoBehaviour {
 	{
 		PrescriptionData resultPrescription = new PrescriptionData ();
 
-		int numberOfLines = Random.Range (minNumberOfLines, maxNumberOfLines);
+		int dayIndex = gameEngine.daysCount - 1;
+		int difficultyIndex = (dayIndex >= difficultyLevels.Count ? (difficultyLevels.Count - 1) : dayIndex);
+		DifficultyLevel difficulty = difficultyLevels [difficultyIndex];
+
+
+		int numberOfMedsOnTable = Random.Range( difficulty.minNumberOfMeds, difficulty.maxNumberOfMeds );
+
+		int numberOfLines = Random.Range (difficulty.minNumberOfLines, difficulty.maxNumberOfLines);
 		string result = "";
+
 		
 		List<int> usedMeds = new List<int> ();
 		List<int> usedSuffixes = new List<int> ();
@@ -122,6 +145,15 @@ public class PrescriptionBehaviour : MonoBehaviour {
 		}
 
 		prescriptionText.text = result;
+
+		List<string> usedMedNames = new List<string>();
+		foreach (MedicationData data in resultPrescription.listOfMedications)
+		{
+			usedMedNames.Add(data.medicationName);
+		}
+		medsContainerManager.HideAllContainers ();
+		medsContainerManager.ShowContainers (usedMedNames);
+		medsContainerManager.AddRandomContainers (numberOfMedsOnTable - usedMedNames.Count);
 
 		gameEngine.SetPrescription (resultPrescription);
 	}
