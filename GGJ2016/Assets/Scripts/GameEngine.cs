@@ -58,7 +58,8 @@ public class GameEngine : MonoBehaviour {
 
 	public List<SideEffect> sideEffects;
 
-	
+	public Slider healthBar;
+
 	public int maxPlayerHP;
 	private int currentPlayerHP;
 
@@ -81,6 +82,11 @@ public class GameEngine : MonoBehaviour {
 		titlePanel.SetActive (!show);
 		creditsPanel.SetActive (show);
 	}
+	
+	public void ExitGame()
+	{
+		Application.Quit ();
+	}
 
 	// Use this for initialization
 	void Start ()
@@ -92,7 +98,10 @@ public class GameEngine : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-	
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			ExitGame();
+		}
 	}
 
 	public void StartDay()
@@ -130,16 +139,30 @@ public class GameEngine : MonoBehaviour {
 				backgroundMusicSource.clip = weakMusic;
 				backgroundMusicSource.Play();
 			}
+			StartCoroutine (WaitAndStartNextDay (3.0f));
 		}
 		else
 		{
 			dayText.text = "GAME OVER";
 			doctorMessage.text = gameOverMessages[Random.Range(0,gameOverMessages.Count)];
+
+			StartCoroutine(WaitAndRestart(5.0f));
 		}
-		
 		blackFadeScreen.SetActive (true);
 		blackFadeAnimator.SetBool ("Visible", true);
-		StartCoroutine (WaitAndStartNextDay (3.0f));
+	}
+	
+	IEnumerator WaitAndRestart(float timer)
+	{
+		yield return new WaitForSeconds (timer);
+		
+		daysCount = 1;
+		currentPlayerHP = maxPlayerHP;
+		healthBar.value = currentPlayerHP;
+		dayText.text = "DAY 1";
+		doctorMessage.text = "\"Hello, I'm Dr. Frank’n Nutter.\nI'm here to take care of you.\nYou are not sick but in prevention, take that prescription.\"";
+		ShowTitle (true);
+		cameraScript.RemoveEffects ();
 	}
 
 	IEnumerator WaitAndStartNextDay(float timer)
@@ -293,6 +316,8 @@ public class GameEngine : MonoBehaviour {
 
 		// HP loss
 		int HPLoss = howManyPillsLeftOnPrescription + numberOfUnwantedPills;
+		currentPlayerHP -= HPLoss;
+		healthBar.value = currentPlayerHP;
 
 		// side effects
 		allPillsDico = CreatePillsDico(allPillsContainers);

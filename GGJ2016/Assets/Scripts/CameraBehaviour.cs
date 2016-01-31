@@ -113,4 +113,19 @@ public class CameraBehaviour : MonoBehaviour {
 		satanContrasts = active;
 		this.GetComponent<ContrastStretch> ().enabled = active;
 	}
+
+	public void RemoveEffects()
+	{
+		SetGrayscale (false);
+		SetHiccup (false);
+		SetMotionBlur (false);
+		SetNoise (false);
+		SetPixelOverlay (false);
+		//SetSatanContrasts (false);
+		SetSepia (false);
+		SetShake (false);
+		SetSneeze (false);
+		SetTilt (false);
+		SetZoom (false);
+	}
 }
