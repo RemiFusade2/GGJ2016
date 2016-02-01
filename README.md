@@ -1,5 +1,13 @@
-# GGJ2016
+# Hypochondriax
 
-Our video game project for the Global Game Jam 2016
+You’re sick! And you don’t know what you have…
+But your doctors are doing everything they can to help you! Their solution? Prescribe all possible drugs until you heal!
+Everyday is a painful and infinite ritual of medicine, but be careful! The prescriptions change everyday and your doctors don’t have the prettiest writing...
+Plus, some of your pills could have some disturbing side effects!
 
-Theme was "Ritual!"
+Team:
+- Amélia Lopes
+- Emilie Breslavetz
+- Janie Poulin
+- Rémi Fusade
+
