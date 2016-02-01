@@ -192,6 +192,7 @@ public class GameEngine : MonoBehaviour {
 		doctorMessage.text = "\"Hello, I'm Dr. Frank’n Nutter.\nI'm here to take care of you.\nYou are not sick YET, but in prevention, take that prescription.\"";
 		ShowTitle (true);
 		cameraScript.RemoveEffects ();
+		cursor.shaking = false;
 	}
 
 	IEnumerator WaitAndStartNextDay(float timer)
@@ -211,6 +212,36 @@ public class GameEngine : MonoBehaviour {
 	public void SetPrescription(PrescriptionData prescription)
 	{
 		currentPrescription = prescription;
+	}
+
+	public Transform morningTriggerAreaParent;
+	public Transform noonTriggerAreaParent;
+	public Transform eveningTriggerAreaParent;
+	private void CheckPillsPosition()
+	{
+		CheckPillsPositionForPeriodOfTime (morningTriggerAreaParent, morningPills);
+		CheckPillsPositionForPeriodOfTime (noonTriggerAreaParent, noonPills);
+		CheckPillsPositionForPeriodOfTime (eveningTriggerAreaParent, eveningPills);
+	}
+	private void CheckPillsPositionForPeriodOfTime(Transform triggerAreaParent, Transform containerObject)
+	{
+		foreach (Transform triggerArea in triggerAreaParent)
+		{
+			Vector2 origin = new Vector2(triggerArea.position.x, triggerArea.position.y);
+			int maxTries = 300;
+			float rayLength = 4.0f;
+			for (int i = 0 ; i < maxTries ; i++)
+			{
+				Vector2 direction = rayLength * new Vector2(Mathf.Sin ((i*1.0f/maxTries)*2*Mathf.PI),Mathf.Cos((i*1.0f/maxTries)*2*Mathf.PI));
+				//Debug.DrawRay(new Vector3(origin.x, origin.y, 0), new Vector3(direction.x, direction.y, 0), Color.red, 1.0f);
+				RaycastHit2D hit = Physics2D.Raycast(origin, direction);
+				if (hit != null && hit.collider.tag.Equals("Pill"))
+				{
+					hit.collider.transform.parent = containerObject;
+					hit.collider.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+				}
+			}
+		}
 	}
 	
 	public Dictionary<string,int> CreatePillsDico(Transform pillsContainer)
@@ -528,6 +559,7 @@ public class GameEngine : MonoBehaviour {
 	
 	public void AbsorbPills()
 	{
+		CheckPillsPosition ();
 		CountPills ();
 		EndDay ();
 	}

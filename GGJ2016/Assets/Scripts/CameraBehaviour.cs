@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
+using System.Collections.Generic;
 
 public class CameraBehaviour : MonoBehaviour {
 
@@ -24,11 +25,14 @@ public class CameraBehaviour : MonoBehaviour {
 	public bool motionBlur;
 	public bool pixelOverlay;
 	public bool satanContrasts;
-
+	
+	public int numberOfSneezesInPackage;
+	private List<Coroutine> sneezeCoroutineList;
 
 	// Use this for initialization
 	void Start () 
 	{
+		sneezeCoroutineList = new List<Coroutine> ();
 	}
 	
 	// Update is called once per frame
@@ -47,23 +51,32 @@ public class CameraBehaviour : MonoBehaviour {
 		hiccup = active;
 		hiccupAnimator.SetBool ("Hiccup", active);
 	}
-	
 	public void SetSneeze(bool active)
 	{
+		if (!active)
+		{
+			foreach(Coroutine co in sneezeCoroutineList)
+			{
+				StopCoroutine(co);
+			}
+			sneezeCoroutineList.Clear();
+		}
 		sneeze = active;
 		if (sneeze)
 		{
-			StartCoroutine (WaitAndSneeze (12.0f));
+			float timer = 12.0f;
+			for (int i = 0 ; i < numberOfSneezesInPackage ; i++)
+			{
+				sneezeCoroutineList.Add(StartCoroutine (WaitAndSneeze (timer)));
+				timer += Random.Range(5.0f,10.0f);
+			}
 		}
 	}
+
 	IEnumerator WaitAndSneeze(float timer)
 	{
 		yield return new WaitForSeconds (timer);
 		sneezeAnimator.SetTrigger ("Sneeze");
-		if (sneeze)
-		{
-			StartCoroutine (WaitAndSneeze (Random.Range (5.0f, 10.0f)));
-		}
 	}
 	
 	public void SetTilt(bool active)
