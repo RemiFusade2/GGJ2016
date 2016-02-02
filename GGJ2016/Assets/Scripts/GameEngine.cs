@@ -5,8 +5,16 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 [System.Serializable]
+public class MedAndQuantity
+{
+	public string medName;
+	public int minimumDosageToApplyEffect;
+}
+
+[System.Serializable]
 public class CombinationOfMeds
 {
+	public List<MedAndQuantity> responsibleMedication;
 	public List<string> responsibleMeds;
 	public int minimumDosageToApplyEffect;
 }
@@ -14,6 +22,7 @@ public class CombinationOfMeds
 [System.Serializable]
 public class SideEffect
 {
+	public string effectKeyCode;
 	public string effectName;
 	public bool inflict;
 	public bool heal;
