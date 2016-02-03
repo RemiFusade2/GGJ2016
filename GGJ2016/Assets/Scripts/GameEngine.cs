@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Xml.Serialization;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 [System.Serializable]
 public class MedAndQuantity
@@ -13,6 +14,11 @@ public class MedAndQuantity
 	public string medName;
 	[XmlAttribute("dosage")]
 	public int minimumDosageToApplyEffect;
+
+	public string ToString()
+	{
+		return minimumDosageToApplyEffect + medName;
+	}
 }
 
 [System.Serializable]
@@ -21,6 +27,18 @@ public class CombinationOfMeds
 	[XmlArray("Medications")]
 	[XmlArrayItem("Medication")]
 	public List<MedAndQuantity> responsibleMedication;
+	[XmlIgnore]
+	public bool knownCombination;
+
+	public string ToString()
+	{
+		string result = "";
+		foreach (MedAndQuantity med in responsibleMedication)
+		{
+			result += med.ToString();
+		}
+		return result;
+	}
 }
 
 [System.Serializable]
@@ -37,6 +55,16 @@ public class SideEffect
 	[XmlArray("MedCombinations")]
 	[XmlArrayItem("MedCombination")]
 	public List<CombinationOfMeds> responsibleMedCombinations;
+	
+	public string GetCombinationCode(int index)
+	{
+		string result = "";
+		if (index >= 0 || index < responsibleMedCombinations.Count)
+		{
+			result = (heal ? "heal" : "inflict") + effectKeyCode + responsibleMedCombinations[index].ToString();
+		}
+		return result;
+	}
 }
 
 [XmlRoot("SideEffectsList")]
@@ -48,8 +76,19 @@ public class SideEffectsList
 	public List<SideEffect> sideEffects;
 }
 
-public class GameEngine : MonoBehaviour {
+[System.Serializable]
+public class KnownSideEffectsCombinations
+{
+	public List<string> knownCombinationCodes;
 
+	public KnownSideEffectsCombinations()
+	{
+		knownCombinationCodes = new List<string> ();
+	}
+}
+
+public class GameEngine : MonoBehaviour 
+{
 	public CursorBehaviour cursor;
 
 	public CameraBehaviour cameraScript;
@@ -80,6 +119,7 @@ public class GameEngine : MonoBehaviour {
 
 	public GameObject titlePanel;
 	public GameObject creditsPanel;
+	public GameObject combosPanel;
 
 	public PrescriptionBehaviour prescriptionScript;
 
@@ -88,7 +128,8 @@ public class GameEngine : MonoBehaviour {
 
 	public SideEffectsList sideEffectsList;
 
-	/*
+	public ComboListBuilder comboList;
+
 	public void SaveSideEffects(string path)
 	{
 		var serializer = new XmlSerializer(typeof(SideEffectsList));
@@ -97,7 +138,7 @@ public class GameEngine : MonoBehaviour {
 			serializer.Serialize(stream, this.sideEffectsList);
 		}
 	}
-	*/
+
 	
 	public void LoadSideEffects(string path)
 	{
@@ -105,6 +146,52 @@ public class GameEngine : MonoBehaviour {
 		using(FileStream stream = new FileStream(path, FileMode.Open))
 		{
 			sideEffectsList = serializer.Deserialize(stream) as SideEffectsList;
+		}
+	}
+
+	public void SavePlayerInfo()
+	{
+		string path = Application.persistentDataPath + "/playerInfo.dat";	
+		Debug.Log ("SAVE FILE AT: " + path);	
+		XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
+		
+		KnownSideEffectsCombinations knowCombinations = new KnownSideEffectsCombinations ();
+		using(FileStream stream = new FileStream(path, FileMode.Create))
+		{
+			foreach (SideEffect effect in sideEffectsList.sideEffects)
+			{
+				for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
+				{
+					string code = effect.GetCombinationCode(index);
+					if (effect.responsibleMedCombinations[index].knownCombination && code != null && !code.Equals(""))
+					{
+						knowCombinations.knownCombinationCodes.Add (effect.GetCombinationCode(index));
+					}
+				}
+			}
+			serializer.Serialize(stream, knowCombinations);
+		}
+	}
+
+	public void LoadPlayerInfo()
+	{
+		string path = Application.persistentDataPath + "/playerInfo.dat";
+		Debug.Log ("LOAD FILE AT: " + path);
+		XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
+		using(FileStream stream = new FileStream(path, FileMode.Open))
+		{
+			KnownSideEffectsCombinations knowCombinations = serializer.Deserialize(stream) as KnownSideEffectsCombinations;
+			foreach (SideEffect effect in sideEffectsList.sideEffects)
+			{
+				for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
+				{
+					string code = effect.GetCombinationCode(index);
+					if (knowCombinations.knownCombinationCodes.Contains(code))
+					{
+						effect.responsibleMedCombinations[index].knownCombination = true;
+					}
+				}
+			}
 		}
 	}
 
@@ -121,19 +208,29 @@ public class GameEngine : MonoBehaviour {
 	public void ShowTitle(bool show)
 	{
 		titlePanel.SetActive (show);
-		if (!show)
-		{
-			StartCoroutine (WaitAndStartNextDay (4.0f));
-			StartCoroutine (WaitAndPlayIntroSound (1.0f));
-			backgroundMusicSource.clip = healthyMusic;
-			backgroundMusicSource.Play();
-		}
+	}
+
+	public void StartGame()
+	{
+		blackFadeScreen.SetActive(true);
+		blackFadeAnimator.SetBool("Visible", true);
+		blackFadeAnimator.SetBool("Instant", true);
+		StartCoroutine (WaitAndStartNextDay (4.0f));
+		StartCoroutine (WaitAndPlayIntroSound (1.0f));
+		backgroundMusicSource.clip = healthyMusic;
+		backgroundMusicSource.Play();
 	}
 
 	public void ShowCredits(bool show)
 	{
 		titlePanel.SetActive (!show);
 		creditsPanel.SetActive (show);
+	}
+	
+	public void ShowCombos(bool show)
+	{
+		titlePanel.SetActive (!show);
+		combosPanel.SetActive (show);
 	}
 	
 	public void ExitGame()
@@ -149,6 +246,19 @@ public class GameEngine : MonoBehaviour {
 
 		string sideEffectsPath = Application.dataPath + "/StreamingAssets/" + "SideEffects.xml";
 		LoadSideEffects (sideEffectsPath);
+
+		// load player info
+		try
+		{
+			LoadPlayerInfo ();
+		}
+		catch (FileNotFoundException ex)
+		{
+
+		}
+
+		// fill combo list
+		comboList.FillContainers ();
 	}
 	
 	// Update is called once per frame
@@ -156,12 +266,39 @@ public class GameEngine : MonoBehaviour {
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			ExitGame();
+			if (!titlePanel.activeSelf)
+			{
+				// fill combo list
+				comboList.FillContainers ();
+				
+				daysCount = 1;
+				currentPlayerHP = maxPlayerHP;
+				healthBar.value = currentPlayerHP;
+				dayText.text = "DAY 1";
+				doctorMessage.text = "\"Hello, I'm Dr. Frank’n Nutter.\nI'm here to take care of you.\nYou are not sick YET, but in prevention, take that prescription.\"";
+				cameraScript.RemoveEffects ();
+				cursor.shaking = false;
+
+				blackFadeAnimator.gameObject.SetActive(true);
+				blackFadeAnimator.SetBool ("Visible", true);
+				blackFadeAnimator.SetBool ("Instant", true);
+
+				foreach(Transform pill in outsidePills)
+				{
+					Destroy(pill.gameObject);
+				}
+
+				ShowTitle(true);
+			}
+			else
+			{
+				ExitGame();
+			}
 		}
 	}
 
 	public void StartDay()
-	{
+	{		
 		prescriptionScript.CreatePrescription ();
 		prescriptionScript.ShowPrescription (true);
 		gameLaunched = true;
@@ -169,6 +306,10 @@ public class GameEngine : MonoBehaviour {
 
 	public void EndDay()
 	{
+		// save player info
+		SavePlayerInfo ();
+		comboList.FillContainers ();
+
 		gameLaunched = false;
 		prescriptionScript.ShowPrescription (false);
 
@@ -211,6 +352,7 @@ public class GameEngine : MonoBehaviour {
 			StartCoroutine(WaitAndRestart(5.0f));
 		}
 		blackFadeScreen.SetActive (true);
+		blackFadeAnimator.SetBool ("Instant", false);
 		blackFadeAnimator.SetBool ("Visible", true);
 	}
 	
@@ -249,6 +391,7 @@ public class GameEngine : MonoBehaviour {
 	IEnumerator WaitAndStartNextDay(float timer)
 	{
 		yield return new WaitForSeconds (timer);
+		blackFadeAnimator.SetBool ("Instant", false);
 		blackFadeAnimator.SetBool ("Visible", false);
 		StartCoroutine (WaitAndHideBlackFadeScreen (2.0f));
 		StartDay ();
@@ -461,11 +604,13 @@ public class GameEngine : MonoBehaviour {
 					combinationIsMet &= (allPillsDico.ContainsKey(med.medName) && allPillsDico[med.medName] >= med.minimumDosageToApplyEffect);
 					//Debug.Log ("there was " + (allPillsDico.ContainsKey(med) ? allPillsDico[med] : 0));
 				}
-				oneCombinationIsMet |= combinationIsMet;
-				if (oneCombinationIsMet)
+
+				if (combinationIsMet)
 				{
-					break;
+					combination.knownCombination = true;
 				}
+
+				oneCombinationIsMet |= combinationIsMet;
 			}
 
 			if (oneCombinationIsMet)
