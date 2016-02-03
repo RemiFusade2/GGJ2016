@@ -15,7 +15,7 @@ public class MedAndQuantity
 	[XmlAttribute("dosage")]
 	public int minimumDosageToApplyEffect;
 
-	public string ToString()
+	public override string ToString()
 	{
 		return minimumDosageToApplyEffect + medName;
 	}
@@ -30,7 +30,7 @@ public class CombinationOfMeds
 	[XmlIgnore]
 	public bool knownCombination;
 
-	public string ToString()
+	public override string ToString()
 	{
 		string result = "";
 		foreach (MedAndQuantity med in responsibleMedication)
@@ -127,6 +127,7 @@ public class GameEngine : MonoBehaviour
 	public PrescriptionData currentPrescription;
 
 	public SideEffectsList sideEffectsList;
+	public bool storeSideEffectsListInStreamingAssets;
 
 	public ComboListBuilder comboList;
 
@@ -151,7 +152,8 @@ public class GameEngine : MonoBehaviour
 
 	public void SavePlayerInfo()
 	{
-		string path = Application.persistentDataPath + "/playerInfo.dat";	
+		string extension = ".dat";
+		string path = Application.persistentDataPath + "/playerInfo" + extension;	
 		Debug.Log ("SAVE FILE AT: " + path);	
 		XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
 		
@@ -175,7 +177,8 @@ public class GameEngine : MonoBehaviour
 
 	public void LoadPlayerInfo()
 	{
-		string path = Application.persistentDataPath + "/playerInfo.dat";
+		string extension = ".dat";
+		string path = Application.persistentDataPath + "/playerInfo" + extension;
 		Debug.Log ("LOAD FILE AT: " + path);
 		XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
 		using(FileStream stream = new FileStream(path, FileMode.Open))
@@ -244,7 +247,8 @@ public class GameEngine : MonoBehaviour
 		daysCount = 1;
 		currentPlayerHP = maxPlayerHP;
 
-		string sideEffectsPath = Application.dataPath + "/StreamingAssets/" + "SideEffects.xml";
+		string extension = ".xml";
+		string sideEffectsPath = ( storeSideEffectsListInStreamingAssets ? Application.streamingAssetsPath : (Application.dataPath) ) + "/SideEffects" + extension ;
 		LoadSideEffects (sideEffectsPath);
 
 		// load player info

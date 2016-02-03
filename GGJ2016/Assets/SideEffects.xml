@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<SideEffectsList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SideEffects>
+    <SideEffect keyCode="MotionBlur" fullName="Remanence" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Geriencompril" dosage="2" />
+            <Medication name="Parkinflix" dosage="2" />
+          </Medications>
+        </MedCombination>
+        <MedCombination>
+          <Medications>
+            <Medication name="Geriencompril" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="MotionBlur" fullName="Remanence" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Saperlipopex" dosage="2" />
+            <Medication name="Samarchpax" dosage="2" />
+            <Medication name="Geriencompril" dosage="2" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="CameraShake" fullName="Nystagmus" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Parkinflix" dosage="2" />
+            <Medication name="Confulax" dosage="2" />
+          </Medications>
+        </MedCombination>
+        <MedCombination>
+          <Medications>
+            <Medication name="Parkinflix" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="CameraShake" fullName="Nystagmus" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Globaljamax" dosage="2" />
+            <Medication name="Mekeskonfex" dosage="2" />
+            <Medication name="Parkinflix" dosage="2" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="RockingBoat" fullName="Kinetosis " inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Confulax" dosage="2" />
+            <Medication name="Mekeskonfex" dosage="2" />
+          </Medications>
+        </MedCombination>
+        <MedCombination>
+          <Medications>
+            <Medication name="Confulax" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="RockingBoat" fullName="Kinetosis " inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Tetrofurax" dosage="2" />
+            <Medication name="Confulax" dosage="2" />
+            <Medication name="Parkinflix" dosage="2" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Monochrome" fullName="Achromatopsia" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Mekeskonfex" dosage="2" />
+            <Medication name="Samarchpax" dosage="2" />
+          </Medications>
+        </MedCombination>
+        <MedCombination>
+          <Medications>
+            <Medication name="Mekeskonfex" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Monochrome" fullName="Achromatopsia" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Iletoupatrax" dosage="3" />
+            <Medication name="Parkinflix" dosage="3" />
+            <Medication name="Mekeskonfex" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Noise" fullName="Visual snow" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Samarchpax" dosage="2" />
+            <Medication name="Saperlipopex" dosage="2" />
+          </Medications>
+        </MedCombination>
+        <MedCombination>
+          <Medications>
+            <Medication name="Samarchpax" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Noise" fullName="Visual snow" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Gradubil" dosage="3" />
+            <Medication name="Geriencompril" dosage="3" />
+            <Medication name="Samarchpax" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Overlay" fullName="Scotopic Sensitivity" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Globaljamax" dosage="2" />
+            <Medication name="Tetrofurax" dosage="2" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Overlay" fullName="Scotopic Sensitivity" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Parkinflix" dosage="2" />
+            <Medication name="Saperlipopex" dosage="2" />
+            <Medication name="Globaljamax" dosage="2" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Sepia" fullName="Instagramitis" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Gradubil" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Sepia" fullName="Instagramitis" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Globaljamax" dosage="4" />
+            <Medication name="Geriencompril" dosage="4" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="CursorShaking" fullName="Shaking Palsy" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Tetrofurax" dosage="2" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="CursorShaking" fullName="Shaking Palsy" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Iletoupatrax" dosage="3" />
+            <Medication name="Globaljamax" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Sneeze" fullName="Sternutation" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Saperlipopex" dosage="2" />
+            <Medication name="Globaljamax" dosage="2" />
+          </Medications>
+        </MedCombination>
+        <MedCombination>
+          <Medications>
+            <Medication name="Saperlipopex" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="Sneeze" fullName="Sternutation" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Gradubil" dosage="3" />
+            <Medication name="Geriencompril" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="MegaContrasts" fullName="Buphthalmos" inflict="true" heal="false">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Iletoupatrax" dosage="3" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+    <SideEffect keyCode="MegaContrasts" fullName="Buphthalmos" inflict="false" heal="true">
+      <MedCombinations>
+        <MedCombination>
+          <Medications>
+            <Medication name="Tetrofurax" dosage="4" />
+            <Medication name="Mekeskonfex" dosage="4" />
+          </Medications>
+        </MedCombination>
+      </MedCombinations>
+    </SideEffect>
+  </SideEffects>
+</SideEffectsList>
