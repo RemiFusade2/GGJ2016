@@ -3,30 +3,49 @@ using System.Collections;
 using AssemblyCSharp;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Xml.Serialization;
+using System.IO;
 
 [System.Serializable]
 public class MedAndQuantity
 {
+	[XmlAttribute("name")]
 	public string medName;
+	[XmlAttribute("dosage")]
 	public int minimumDosageToApplyEffect;
 }
 
 [System.Serializable]
 public class CombinationOfMeds
 {
+	[XmlArray("Medications")]
+	[XmlArrayItem("Medication")]
 	public List<MedAndQuantity> responsibleMedication;
-	public List<string> responsibleMeds;
-	public int minimumDosageToApplyEffect;
 }
 
 [System.Serializable]
 public class SideEffect
 {
+	[XmlAttribute("keyCode")]
 	public string effectKeyCode;
+	[XmlAttribute("fullName")]
 	public string effectName;
+	[XmlAttribute("inflict")]
 	public bool inflict;
+	[XmlAttribute("heal")]
 	public bool heal;
+	[XmlArray("MedCombinations")]
+	[XmlArrayItem("MedCombination")]
 	public List<CombinationOfMeds> responsibleMedCombinations;
+}
+
+[XmlRoot("SideEffectsList")]
+[System.Serializable]
+public class SideEffectsList
+{
+	[XmlArray("SideEffects")]
+	[XmlArrayItem("SideEffect")]
+	public List<SideEffect> sideEffects;
 }
 
 public class GameEngine : MonoBehaviour {
@@ -67,7 +86,27 @@ public class GameEngine : MonoBehaviour {
 
 	public PrescriptionData currentPrescription;
 
-	public List<SideEffect> sideEffects;
+	public SideEffectsList sideEffectsList;
+
+	/*
+	public void SaveSideEffects(string path)
+	{
+		var serializer = new XmlSerializer(typeof(SideEffectsList));
+		using(FileStream stream = new FileStream(path, FileMode.Create))
+		{
+			serializer.Serialize(stream, this.sideEffectsList);
+		}
+	}
+	*/
+	
+	public void LoadSideEffects(string path)
+	{
+		var serializer = new XmlSerializer(typeof(SideEffectsList));
+		using(FileStream stream = new FileStream(path, FileMode.Open))
+		{
+			sideEffectsList = serializer.Deserialize(stream) as SideEffectsList;
+		}
+	}
 
 	public Slider healthBar;
 
@@ -107,6 +146,9 @@ public class GameEngine : MonoBehaviour {
 	{
 		daysCount = 1;
 		currentPlayerHP = maxPlayerHP;
+
+		string sideEffectsPath = Application.dataPath + "/StreamingAssets/" + "SideEffects.xml";
+		LoadSideEffects (sideEffectsPath);
 	}
 	
 	// Update is called once per frame
@@ -406,17 +448,17 @@ public class GameEngine : MonoBehaviour {
 		allPillsDico = CreatePillsDico(allPillsContainers);
 		List<string> sideEffectsToInflict = new List<string> ();
 		List<string> sideEffectsToHeal = new List<string> ();
-		foreach (SideEffect sideEffect in sideEffects)
+		foreach (SideEffect sideEffect in this.sideEffectsList.sideEffects)
 		{
 			// check for combinations
 			bool oneCombinationIsMet = false;
 			foreach (CombinationOfMeds combination in sideEffect.responsibleMedCombinations)
 			{
 				bool combinationIsMet = true;
-				foreach (string med in combination.responsibleMeds)
+				foreach (MedAndQuantity med in combination.responsibleMedication)
 				{
 					//Debug.Log ("looking for " + combination.minimumDosageToApplyEffect + " " + med);
-					combinationIsMet &= (allPillsDico.ContainsKey(med) && allPillsDico[med] >= combination.minimumDosageToApplyEffect);
+					combinationIsMet &= (allPillsDico.ContainsKey(med.medName) && allPillsDico[med.medName] >= med.minimumDosageToApplyEffect);
 					//Debug.Log ("there was " + (allPillsDico.ContainsKey(med) ? allPillsDico[med] : 0));
 				}
 				oneCombinationIsMet |= combinationIsMet;
@@ -428,13 +470,13 @@ public class GameEngine : MonoBehaviour {
 
 			if (oneCombinationIsMet)
 			{
-				if (sideEffect.inflict && !sideEffectsToInflict.Contains(sideEffect.effectName))
+				if (sideEffect.inflict && !sideEffectsToInflict.Contains(sideEffect.effectKeyCode))
 				{
-					sideEffectsToInflict.Add(sideEffect.effectName);
+					sideEffectsToInflict.Add(sideEffect.effectKeyCode);
 				}
-				if (sideEffect.heal && !sideEffectsToHeal.Contains(sideEffect.effectName))
+				if (sideEffect.heal && !sideEffectsToHeal.Contains(sideEffect.effectKeyCode))
 				{
-					sideEffectsToHeal.Add(sideEffect.effectName);
+					sideEffectsToHeal.Add(sideEffect.effectKeyCode);
 				}
 			}
 		}
