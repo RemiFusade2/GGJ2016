@@ -127,74 +127,111 @@ public class GameEngine : MonoBehaviour
 	public PrescriptionData currentPrescription;
 
 	public SideEffectsList sideEffectsList;
-	public bool storeSideEffectsListInStreamingAssets;
+	public SideEffectsBackupBehaviour sideEffectsBackupData;
+	public bool useOnlySideEffectsBackup;
 
 	public ComboListBuilder comboList;
 
 	public void SaveSideEffects(string path)
 	{
-		var serializer = new XmlSerializer(typeof(SideEffectsList));
-		using(FileStream stream = new FileStream(path, FileMode.Create))
+		if (useOnlySideEffectsBackup)
 		{
-			serializer.Serialize(stream, this.sideEffectsList);
+			sideEffectsBackupData.sideEffectsList = sideEffectsList;
+		}
+		else
+		{
+			XmlSerializer serializer = new XmlSerializer(typeof(SideEffectsList));
+			using(FileStream stream = new FileStream(path, FileMode.Create))
+			{
+				serializer.Serialize(stream, this.sideEffectsList);
+			}
 		}
 	}
 
 	
 	public void LoadSideEffects(string path)
 	{
-		var serializer = new XmlSerializer(typeof(SideEffectsList));
-		using(FileStream stream = new FileStream(path, FileMode.Open))
+		if (useOnlySideEffectsBackup)
 		{
-			sideEffectsList = serializer.Deserialize(stream) as SideEffectsList;
+			sideEffectsList = sideEffectsBackupData.sideEffectsList;
+		}
+		else
+		{
+			try
+			{
+				XmlSerializer serializer = new XmlSerializer(typeof(SideEffectsList));
+				using(FileStream stream = new FileStream(path, FileMode.Open))
+				{
+					sideEffectsList = serializer.Deserialize(stream) as SideEffectsList;
+				}
+			}
+			catch (System.Exception ex)
+			{
+				Debug.Log("Exception: " + ex.Message);
+				sideEffectsList = sideEffectsBackupData.sideEffectsList;
+			}
 		}
 	}
 
 	public void SavePlayerInfo()
 	{
-		string extension = ".dat";
-		string path = Application.persistentDataPath + "/playerInfo" + extension;	
-		Debug.Log ("SAVE FILE AT: " + path);	
-		XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
-		
-		KnownSideEffectsCombinations knowCombinations = new KnownSideEffectsCombinations ();
-		using(FileStream stream = new FileStream(path, FileMode.Create))
+		try
 		{
-			foreach (SideEffect effect in sideEffectsList.sideEffects)
+			string extension = ".dat";
+			string path = Application.persistentDataPath + "/playerInfo" /* + extension */;	
+			Debug.Log ("SAVE FILE AT: " + path);	
+			XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
+			
+			KnownSideEffectsCombinations knowCombinations = new KnownSideEffectsCombinations ();
+			using(FileStream stream = new FileStream(path, FileMode.Create))
 			{
-				for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
+				foreach (SideEffect effect in sideEffectsList.sideEffects)
 				{
-					string code = effect.GetCombinationCode(index);
-					if (effect.responsibleMedCombinations[index].knownCombination && code != null && !code.Equals(""))
+					for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
 					{
-						knowCombinations.knownCombinationCodes.Add (effect.GetCombinationCode(index));
+						string code = effect.GetCombinationCode(index);
+						if (effect.responsibleMedCombinations[index].knownCombination && code != null && !code.Equals(""))
+						{
+							knowCombinations.knownCombinationCodes.Add (effect.GetCombinationCode(index));
+						}
 					}
 				}
+				serializer.Serialize(stream, knowCombinations);
 			}
-			serializer.Serialize(stream, knowCombinations);
+		}
+		catch (System.Exception ex)
+		{
+			
 		}
 	}
 
 	public void LoadPlayerInfo()
 	{
-		string extension = ".dat";
-		string path = Application.persistentDataPath + "/playerInfo" + extension;
-		Debug.Log ("LOAD FILE AT: " + path);
-		XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
-		using(FileStream stream = new FileStream(path, FileMode.Open))
+		try
 		{
-			KnownSideEffectsCombinations knowCombinations = serializer.Deserialize(stream) as KnownSideEffectsCombinations;
-			foreach (SideEffect effect in sideEffectsList.sideEffects)
+			string extension = ".dat";
+			string path = Application.persistentDataPath + "/playerInfo" /* + extension */;
+			Debug.Log ("LOAD FILE AT: " + path);
+			XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
+			using(FileStream stream = new FileStream(path, FileMode.Open))
 			{
-				for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
+				KnownSideEffectsCombinations knowCombinations = serializer.Deserialize(stream) as KnownSideEffectsCombinations;
+				foreach (SideEffect effect in sideEffectsList.sideEffects)
 				{
-					string code = effect.GetCombinationCode(index);
-					if (knowCombinations.knownCombinationCodes.Contains(code))
+					for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
 					{
-						effect.responsibleMedCombinations[index].knownCombination = true;
+						string code = effect.GetCombinationCode(index);
+						if (knowCombinations.knownCombinationCodes.Contains(code))
+						{
+							effect.responsibleMedCombinations[index].knownCombination = true;
+						}
 					}
 				}
 			}
+		}
+		catch (System.Exception ex)
+		{
+
 		}
 	}
 
@@ -248,7 +285,7 @@ public class GameEngine : MonoBehaviour
 		currentPlayerHP = maxPlayerHP;
 
 		string extension = ".xml";
-		string sideEffectsPath = ( storeSideEffectsListInStreamingAssets ? Application.streamingAssetsPath : (Application.dataPath) ) + "/SideEffects" + extension ;
+		string sideEffectsPath = Application.streamingAssetsPath + "/SideEffects" + extension ;
 		LoadSideEffects (sideEffectsPath);
 
 		// load player info

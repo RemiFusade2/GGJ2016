@@ -1,64 +1,6 @@
 Base path: C:/Program Files/Unity/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-64bit-4-4000
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-4-8464
 Cmd: getPlatforms
-Cmd: compileSnippet
-  api=1 type=0 insize=1316 outsize=187 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=2189 outsize=305 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=2189 outsize=121 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=2193 outsize=305 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=2195 outsize=305 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=724 outsize=199 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=657 outsize=391 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=1298 outsize=494 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=814 outsize=144 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=1592 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=1135 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=1316 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=2189 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=2193 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=0 insize=724 outsize=727 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=0 insize=657 outsize=1048 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=0 insize=1298 outsize=1681 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=0 insize=859 outsize=764 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=0 insize=814 outsize=651 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=1135 outsize=2023 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=1316 outsize=2153 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=2189 outsize=1325 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=2189 outsize=1698 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=2192 outsize=2186 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=2192 outsize=2803 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=2195 outsize=1325 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=724 outsize=1219 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=657 outsize=1438 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=1298 outsize=2917 kw= ok=1
 Unhandled exception: Readfile from pipe failed. GLE=Le canal de communication a été fermé.
 
 

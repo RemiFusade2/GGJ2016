@@ -1,50 +1,6 @@
 Base path: C:/Program Files/Unity/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-64bit-3-5996
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-3-7644
 Cmd: getPlatforms
-Cmd: compileSnippet
-  api=1 type=1 insize=1135 outsize=347 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=1316 outsize=273 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=2189 outsize=198 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=2193 outsize=135 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=2192 outsize=408 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=2195 outsize=124 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=0 insize=657 outsize=131 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=859 outsize=81 kw= ok=1
-Cmd: compileSnippet
-  api=1 type=1 insize=814 outsize=63 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=0 insize=1135 outsize=1384 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=2189 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=2192 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=2195 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=724 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=657 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=1298 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=9 type=1 insize=859 outsize=7 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=1316 outsize=1902 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=2195 outsize=2186 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=724 outsize=1438 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=1 insize=859 outsize=1024 kw= ok=1
-Cmd: compileSnippet
-  api=8 type=0 insize=814 outsize=1560 kw= ok=1
 Unhandled exception: Readfile from pipe failed. GLE=Le canal de communication a été fermé.
 
 
