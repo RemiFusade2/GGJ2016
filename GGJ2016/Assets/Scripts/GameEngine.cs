@@ -129,6 +129,8 @@ public class GameEngine : MonoBehaviour
 	public SideEffectsList sideEffectsList;
 	public SideEffectsBackupBehaviour sideEffectsBackupData;
 	public bool useOnlySideEffectsBackup;
+	public bool useExtensionsForSavedFiles;
+	public bool usePlayerPrefsForPlayerData;
 
 	public ComboListBuilder comboList;
 
@@ -177,26 +179,39 @@ public class GameEngine : MonoBehaviour
 	{
 		try
 		{
-			string extension = ".dat";
-			string path = Application.persistentDataPath + "/playerInfo" /* + extension */;	
-			Debug.Log ("SAVE FILE AT: " + path);	
-			XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
-			
 			KnownSideEffectsCombinations knowCombinations = new KnownSideEffectsCombinations ();
-			using(FileStream stream = new FileStream(path, FileMode.Create))
+			foreach (SideEffect effect in sideEffectsList.sideEffects)
 			{
-				foreach (SideEffect effect in sideEffectsList.sideEffects)
+				for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
 				{
-					for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
+					string code = effect.GetCombinationCode(index);
+					if (effect.responsibleMedCombinations[index].knownCombination && code != null && !code.Equals(""))
 					{
-						string code = effect.GetCombinationCode(index);
-						if (effect.responsibleMedCombinations[index].knownCombination && code != null && !code.Equals(""))
-						{
-							knowCombinations.knownCombinationCodes.Add (effect.GetCombinationCode(index));
-						}
+						knowCombinations.knownCombinationCodes.Add (effect.GetCombinationCode(index));
 					}
 				}
-				serializer.Serialize(stream, knowCombinations);
+			}
+			if (usePlayerPrefsForPlayerData)
+			{
+				string keyPrefix = "Hypochondriax_PlayerData";
+				foreach(string key in knowCombinations.knownCombinationCodes)
+				{
+					PlayerPrefs.SetInt(keyPrefix+key, 1);
+				}
+				PlayerPrefs.Save();
+			}
+			else
+			{
+				string extension = ".dat";
+				string path = Application.persistentDataPath + "/playerInfo" + (useExtensionsForSavedFiles?extension:"");	
+				Debug.Log ("SAVE FILE AT: " + path);
+				XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
+
+				using(FileStream stream = new FileStream(path, FileMode.Create))
+				{
+					serializer.Serialize(stream, knowCombinations);
+				}
+
 			}
 		}
 		catch (System.Exception ex)
@@ -209,21 +224,40 @@ public class GameEngine : MonoBehaviour
 	{
 		try
 		{
-			string extension = ".dat";
-			string path = Application.persistentDataPath + "/playerInfo" /* + extension */;
-			Debug.Log ("LOAD FILE AT: " + path);
-			XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
-			using(FileStream stream = new FileStream(path, FileMode.Open))
+			if (usePlayerPrefsForPlayerData)
 			{
-				KnownSideEffectsCombinations knowCombinations = serializer.Deserialize(stream) as KnownSideEffectsCombinations;
+				string keyPrefix = "Hypochondriax_PlayerData";
+
 				foreach (SideEffect effect in sideEffectsList.sideEffects)
 				{
 					for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
 					{
 						string code = effect.GetCombinationCode(index);
-						if (knowCombinations.knownCombinationCodes.Contains(code))
+						if (PlayerPrefs.GetInt(keyPrefix + code) == 1)
 						{
 							effect.responsibleMedCombinations[index].knownCombination = true;
+						}
+					}
+				}
+			}
+			else
+			{
+				string extension = ".dat";
+				string path = Application.persistentDataPath + "/playerInfo" + (useExtensionsForSavedFiles?extension:"");
+				Debug.Log ("LOAD FILE AT: " + path);
+				XmlSerializer serializer = new XmlSerializer(typeof(KnownSideEffectsCombinations));
+				using(FileStream stream = new FileStream(path, FileMode.Open))
+				{
+					KnownSideEffectsCombinations knowCombinations = serializer.Deserialize(stream) as KnownSideEffectsCombinations;
+					foreach (SideEffect effect in sideEffectsList.sideEffects)
+					{
+						for (int index = 0 ; index < effect.responsibleMedCombinations.Count ; index++)
+						{
+							string code = effect.GetCombinationCode(index);
+							if (knowCombinations.knownCombinationCodes.Contains(code))
+							{
+								effect.responsibleMedCombinations[index].knownCombination = true;
+							}
 						}
 					}
 				}
@@ -285,7 +319,7 @@ public class GameEngine : MonoBehaviour
 		currentPlayerHP = maxPlayerHP;
 
 		string extension = ".xml";
-		string sideEffectsPath = Application.streamingAssetsPath + "/SideEffects" + extension ;
+		string sideEffectsPath = Application.streamingAssetsPath + "/SideEffects" + (useExtensionsForSavedFiles?extension:"") ;
 		LoadSideEffects (sideEffectsPath);
 
 		// load player info
@@ -323,13 +357,27 @@ public class GameEngine : MonoBehaviour
 				blackFadeAnimator.gameObject.SetActive(true);
 				blackFadeAnimator.SetBool ("Visible", true);
 				blackFadeAnimator.SetBool ("Instant", true);
-
+				
+				foreach(Transform pill in morningPills)
+				{
+					Destroy(pill.gameObject);
+				}
+				foreach(Transform pill in noonPills)
+				{
+					Destroy(pill.gameObject);
+				}
+				foreach(Transform pill in eveningPills)
+				{
+					Destroy(pill.gameObject);
+				}
 				foreach(Transform pill in outsidePills)
 				{
 					Destroy(pill.gameObject);
 				}
-
+				
 				ShowTitle(true);
+				ShowCredits(false);
+				ShowCombos(false);
 			}
 			else
 			{
