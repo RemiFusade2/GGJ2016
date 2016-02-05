@@ -102,6 +102,8 @@ public class GameEngine : MonoBehaviour
 	public Text dayText;
 	public Text doctorMessage;
 
+	public string introMessage;
+
 	public List<string> healthyMessages;
 	public List<string> mediumHealthMessages;
 	public List<string> weakMessages;
@@ -350,7 +352,7 @@ public class GameEngine : MonoBehaviour
 				currentPlayerHP = maxPlayerHP;
 				healthBar.value = currentPlayerHP;
 				dayText.text = "DAY 1";
-				doctorMessage.text = "\"Hello, I'm Dr. Frank’n Nutter.\nI'm here to take care of you.\nYou are not sick YET, but in prevention, take that prescription.\"";
+				doctorMessage.text = introMessage.Replace("\\n","\n");
 				cameraScript.RemoveEffects ();
 				cursor.shaking = false;
 
@@ -471,7 +473,7 @@ public class GameEngine : MonoBehaviour
 		currentPlayerHP = maxPlayerHP;
 		healthBar.value = currentPlayerHP;
 		dayText.text = "DAY 1";
-		doctorMessage.text = "\"Hello, I'm Dr. Frank’n Nutter.\nI'm here to take care of you.\nYou are not sick YET, but in prevention, take that prescription.\"";
+		doctorMessage.text = introMessage.Replace("\\n","\n");
 		ShowTitle (true);
 		cameraScript.RemoveEffects ();
 		cursor.shaking = false;

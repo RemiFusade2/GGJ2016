@@ -39,6 +39,8 @@ public class PrescriptionBehaviour : MonoBehaviour
 	public List<string> prescriptionMedsPlural;
 	public List<PrescriptionSuffix> prescriptionSuffixs;
 
+	public TextMesh doctorSignature;
+	public List<string> doctorNames;
 	public List<Font> fonts;
 	public List<Material> fontMaterials;
 	public List<int> characterSizeByFont;
@@ -90,6 +92,11 @@ public class PrescriptionBehaviour : MonoBehaviour
 		prescriptionText.font = fonts [fontIndex];
 		prescriptionText.fontSize = characterSizeByFont [fontIndex];
 		prescriptionText.GetComponent<Renderer> ().material = fontMaterials [fontIndex];
+
+		doctorSignature.text = doctorNames [fontIndex];
+		doctorSignature.font = fonts [fontIndex];
+		doctorSignature.fontSize = characterSizeByFont [fontIndex];
+		doctorSignature.GetComponent<Renderer> ().material = fontMaterials [fontIndex];
 
 		for (int i = 0 ; i < numberOfLines ; i++)
 		{
