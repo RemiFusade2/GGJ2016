@@ -1,0 +1,8 @@
+lastUpgrade=00931
+proj.AppId=625850799338
+and.BundleId=com.GGJ2016.Hypochondriax
+proj.classDir=Assets
+proj.ConstantsClassName=Hypochondriax
+and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3cstring+name%3d%22app_id%22%3e625850799338%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22package_name%22%3ecom.GGJ2016.Hypochondriax%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_remanence%22%3eCgkI6qn1vJsSEAIQAQ%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_nystagmus%22%3eCgkI6qn1vJsSEAIQAw%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_kinetosis%22%3eCgkI6qn1vJsSEAIQBA%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_achromatopsia%22%3eCgkI6qn1vJsSEAIQBQ%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_visual_snow%22%3eCgkI6qn1vJsSEAIQBg%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_scotopic_sensitivity%22%3eCgkI6qn1vJsSEAIQBw%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_instagramitis%22%3eCgkI6qn1vJsSEAIQCA%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_shaking_palsy%22%3eCgkI6qn1vJsSEAIQCQ%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_sternutation%22%3eCgkI6qn1vJsSEAIQCg%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_buphthalmos%22%3eCgkI6qn1vJsSEAIQCw%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22leaderboard_days_survived%22%3eCgkI6qn1vJsSEAIQAg%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d%0a
+and.ClientId=
+proj.requireGPlus=false

@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
+
 [System.Serializable]
 public class MedAndQuantity
 {
@@ -508,12 +509,15 @@ public class GameEngine : MonoBehaviour
 		CheckPillsPositionForPeriodOfTime (noonTriggerAreaParent, noonPills);
 		CheckPillsPositionForPeriodOfTime (eveningTriggerAreaParent, eveningPills);
 	}
+
+	public int maximumNumberOfRaysPerSource;
+
 	private void CheckPillsPositionForPeriodOfTime(Transform triggerAreaParent, Transform containerObject)
 	{
 		foreach (Transform triggerArea in triggerAreaParent)
 		{
 			Vector2 origin = new Vector2(triggerArea.position.x, triggerArea.position.y);
-			int maxTries = 300;
+			int maxTries = maximumNumberOfRaysPerSource;
 			float rayLength = 4.0f;
 			for (int i = 0 ; i < maxTries ; i++)
 			{
