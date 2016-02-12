@@ -26,6 +26,8 @@ namespace AssemblyCSharp
 		public bool needMorning;
 		public bool needNoon;
 		public bool needEvening;
+
+		public bool isRequired;
 	}
 	
 	[Serializable]
@@ -38,7 +40,7 @@ namespace AssemblyCSharp
 			listOfMedications = new List<MedicationData> ();
 		}
 
-		public void AddMedicationData(string medicationName, int numberOfPills, int frequencyByDay, bool needMorning, bool needNoon, bool needEvening)
+		public void AddMedicationData(string medicationName, int numberOfPills, int frequencyByDay, bool needMorning, bool needNoon, bool needEvening, bool isRequired)
 		{
 			MedicationData medData = new MedicationData ();
 			medData.medicationName = medicationName;
@@ -48,6 +50,7 @@ namespace AssemblyCSharp
 			medData.needMorning = needMorning;
 			medData.needNoon = needNoon;
 			medData.needEvening = needEvening;
+			medData.isRequired = isRequired;
 			listOfMedications.Add (medData);
 		}
 	}

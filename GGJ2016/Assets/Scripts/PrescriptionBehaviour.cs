@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using AssemblyCSharp;
+using System.Xml.Serialization;
 
 [System.Serializable]
 public class PrescriptionSuffix
@@ -13,6 +14,8 @@ public class PrescriptionSuffix
 	public bool needMorning;
 	public bool needNoon;
 	public bool needEvening;
+
+	public bool isRequired;
 }
 
 [System.Serializable]
@@ -23,6 +26,15 @@ public class DifficultyLevel
 	
 	public int minNumberOfMeds;
 	public int maxNumberOfMeds;
+}
+
+[XmlRoot("PrescriptionSuffixesList")]
+[System.Serializable]
+public class PrescriptionSuffixesList
+{
+	[XmlArray("PrescriptionSuffixes")]
+	[XmlArrayItem("PrescriptionSuffix")]
+	public List<PrescriptionSuffix> suffixes;
 }
 
 public class PrescriptionBehaviour : MonoBehaviour 
@@ -38,6 +50,7 @@ public class PrescriptionBehaviour : MonoBehaviour
 	public List<string> prescriptionMedsSingular;
 	public List<string> prescriptionMedsPlural;
 	public List<PrescriptionSuffix> prescriptionSuffixs;
+	public PrescriptionSuffixesBehaviour prescriptionSuffixesBackupData;
 
 	public TextMesh doctorSignature;
 	public List<string> doctorNames;
@@ -149,7 +162,7 @@ public class PrescriptionBehaviour : MonoBehaviour
 				}
 			}
 
-			resultPrescription.AddMedicationData(prescriptionMedsName[medIndex], medsCount, suffix.frequencyByDay, suffix.needMorning, suffix.needNoon, suffix.needEvening);
+			resultPrescription.AddMedicationData(prescriptionMedsName[medIndex], medsCount, suffix.frequencyByDay, suffix.needMorning, suffix.needNoon, suffix.needEvening, suffix.isRequired);
 
 			prescriptionLines.Add(newLine);
 
